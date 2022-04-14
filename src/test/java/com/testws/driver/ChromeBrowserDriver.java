@@ -43,6 +43,8 @@ public class ChromeBrowserDriver {
 
     /** Close chrome */
     public void quit() {
+        testLogger.logTestStep("Close Chrome Browser");
+
         driver.quit();
     }
 
