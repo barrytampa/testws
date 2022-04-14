@@ -77,11 +77,11 @@ public class SearchTest {
         // If one or more results don't match, the method will log ALL mismatching results across all the web pages before failing the test case
         validation.validatePartialTextInAllListItems(searchResultsDescriptions, expectedSearchPartialText, "Search Results Descriptions");
 
-        // Note the item description of the last item on the current page
+        // Note the item description of the last item in the all items list (also the last item on the current page)
         String lastSearchItemDescription = searchResultsDescriptions.get(searchResultsDescriptions.size() - 1);
 
-        // Add the last item to the cart
-        searchResultsGrid.addItemToCart(-1);
+        // Add the last item to the cart - need to get the current page item count to calculate its index on the current page
+        searchResultsGrid.addItemToCart(searchResultsGrid.getCurrentPageItemCount() - 1);
 
         // If the product accessory popup appears, select the first option and click add to cart button
         if (cartProductAccessoriesPopupPage.isVisible()) {
@@ -99,7 +99,7 @@ public class SearchTest {
         // Verify the item we should have selected is now in the cart
         validation.validateListContainsItem(cartItemDescriptions, lastSearchItemDescription, "Cart Products");
 
-        // Empty the cart
+        // Empty the cart and confirm it has no items left after emptying
         cartPage.emptyCart();
     }
 }

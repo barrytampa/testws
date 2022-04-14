@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Copyright (c) 2022. Barry Ollikkala
@@ -16,7 +15,9 @@ import java.util.Locale;
  *
  * The Product Cart page */
 public class CartPage {
-    public static final String ITEM_DESCRIPTION_XPATH = "//div[contains(@class, 'cartItem ag-item gtm-product-auto')]//span[contains(@class, 'itemDescription')]//a";
+
+    private static final String EMPTY_CART_BUTTON_XPATH =       "//a[contains(@class, 'emptyCartButton')]";
+    private static final String ITEM_DESCRIPTIONS_XPATH =       "//div[contains(@class, 'cartItem ag-item gtm-product-auto')]//span[contains(@class, 'itemDescription')]//a";
 
     ChromeBrowserDriver chromeBrowserDriver;
 
@@ -24,7 +25,7 @@ public class CartPage {
 
     public EmptyCartConfirmationPopupPage getEmptyCartConfirmationPopupPage() {     return emptyCartConfirmationPopupPage; }
 
-    @FindBy(xpath = "//a[contains(@class, 'emptyCartButton')]")
+    @FindBy(xpath = EMPTY_CART_BUTTON_XPATH)
     public WebElement emptyCartButton;
 
     public CartPage(ChromeBrowserDriver chromeBrowserDriver) {
@@ -41,7 +42,7 @@ public class CartPage {
     public List<String> getItemDescriptions() {
         List<String> itemDescriptions = new ArrayList<>();
 
-        List<WebElement> itemDescriptionWebElements = chromeBrowserDriver.findWebElementList(By.xpath(ITEM_DESCRIPTION_XPATH));
+        List<WebElement> itemDescriptionWebElements = chromeBrowserDriver.findWebElementList(By.xpath(ITEM_DESCRIPTIONS_XPATH));
 
         for (WebElement itemDescriptionWebElement : itemDescriptionWebElements) {
             itemDescriptions.add(itemDescriptionWebElement.getText());

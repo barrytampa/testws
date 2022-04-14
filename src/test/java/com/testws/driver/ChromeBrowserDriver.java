@@ -122,6 +122,8 @@ public class ChromeBrowserDriver {
                         break;
                     }
                 }
+
+                Thread.sleep(100);
             }
 
         } catch (Exception exception) {

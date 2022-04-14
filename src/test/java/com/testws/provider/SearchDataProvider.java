@@ -25,7 +25,8 @@ public class SearchDataProvider {
 
         switch (testEnvironmentType) {
             case TEST_ENVIRONMENT_PRODUCTION:
-                searchDataMap.put("Steel Work Table", "Table");
+                searchDataMap.put("steel work table", "Table");     // <---used for code test
+                searchDataMap.put("Steel Work Table", "Table");     // Add more data here to get coverage of different permutations
                 break;
 
             default:

@@ -18,10 +18,10 @@ public class Validation {
 
     /** Validate two values are equal with full logging */
     public void validateEquals(Object actualValue, Object expectedValue, String itemLogDescription) throws Exception {
-        String actualValueLogString =       actualValue == null     ? "" : actualValue.toString();
-        String expectedValueLogString =     expectedValue == null   ? "" : expectedValue.toString();
+        String actualValueLogString =       actualValue == null     ? "<null>" : actualValue.toString();
+        String expectedValueLogString =     expectedValue == null   ? "<null>" : expectedValue.toString();
 
-        testLogger.logTestStep("Verify " + itemLogDescription + " is " + expectedValueLogString);
+        testLogger.logTestStep("Verify " + itemLogDescription + " is '" + expectedValueLogString + "'");
 
         boolean isEqual = actualValue == null ? expectedValue == null : actualValue.equals(expectedValue);
 
@@ -65,14 +65,14 @@ public class Validation {
 
     /** Validate that the list contains the given item, with full logging */
     public void validateListContainsItem(List<String> list, String item, String listLogDescription) throws Exception {
-        testLogger.logTestStep("Verify " + listLogDescription + "' list contains the item '" + item);
+        testLogger.logTestStep("Verify " + listLogDescription + " list contains the item '" + item + "'");
 
         int indexOfItem = list.indexOf(item);
 
         if (indexOfItem == -1) {
             testLogger.fail(listLogDescription + " list did not contain the item '" + item + "'", null);
         } else {
-            testLogger.log("Item '" + item + " was found at index " + indexOfItem + " in " + listLogDescription + " list");
+            testLogger.log("Item '" + item + "' was found at index " + indexOfItem + " in " + listLogDescription + " list");
         }
     }
 }

@@ -11,7 +11,7 @@ public class WebPortalProvider {
     public static String getMainPortalURL(TestEnvironmentType testEnvironmentType) throws Exception {
         switch (testEnvironmentType) {
             case TEST_ENVIRONMENT_PRODUCTION:
-                return "https://webstaurant.com";
+                return "https://webstaurantstore.com";
 
             default:
                 throw new Exception("Can't get main portal URL for test environment '" + testEnvironmentType + "' - URL has not been defined in WebPortalProvider.getMainPortalURL()");
