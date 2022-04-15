@@ -10,6 +10,13 @@ import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/** Base Class for Web Pages in the Applicatiojn's Page object model
+ * Copyright (c) 2022. Barry Ollikkala
+ * Created by Barry Ollikkala on 4/13/2022.
+ *
+ *
+ * Provides common low-level selenium methods with logging and validation for use internally in page classes, and access to the test logger and validation objects
+ */
 public abstract class AbstractWebPage {
     protected final ChromeWebBrowser chromeWebBrowser;
     protected final TestLogger testLogger;
