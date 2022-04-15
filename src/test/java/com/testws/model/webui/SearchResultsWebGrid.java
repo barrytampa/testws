@@ -1,7 +1,6 @@
 package com.testws.model.webui;
 
-import com.testws.core.TestLogger;
-import com.testws.driver.ChromeBrowserDriver;
+import com.testws.library.webui.AbstractWebPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * Search results grid control, found on the Portal's main page
  * Contains common methods to page through the grid and get search results descriptions for validation
  * */
-public class SearchResultsGrid {
+public class SearchResultsWebGrid extends AbstractWebPage {
     private static final String GRID_PAGE_LIST_ITEM_PARTIAL_CLASS_STRING =          "rc-pagination-item rc-pagination-item-";
     private static final String GRID_FIRST_PAGE_BUTTON_XPATH_STRING =               "//li[contains(@class,'" + GRID_PAGE_LIST_ITEM_PARTIAL_CLASS_STRING + "1')]";
     private static final String GRID_LAST_PAGE_BUTTON_XPATH_STRING =                "//li[contains(@class,'" + GRID_PAGE_LIST_ITEM_PARTIAL_CLASS_STRING + "')][last()]";
@@ -25,23 +24,21 @@ public class SearchResultsGrid {
 
     private static final String ADD_ITEM_TO_CART_BY_ORDINAL_FORMAT_STRING =         "//div[@id='ProductBoxContainer'][%s]//input[@data-testid='itemAddCart']";
 
-    private final ChromeBrowserDriver chromeBrowserDriver;
-
-    public SearchResultsGrid(MainPortalPage mainPortalPage) {
-        this.chromeBrowserDriver = mainPortalPage.chromeBrowserDriver;
+    public SearchResultsWebGrid(MainPortalWebPage mainPortalPage) {
+        super(mainPortalPage.getChromeBrowserDriver());
     }
 
     /** Get the search page count from the paging controls at the bottom of the grid */
     public int getSearchPageCount(boolean failIfNoPagesFound) throws Exception {
         try {
             // Get the list item control used to page to the last page
-            WebElement lastGridPageButton = chromeBrowserDriver.findWebElement(By.xpath(GRID_LAST_PAGE_BUTTON_XPATH_STRING), false);
+            WebElement lastGridPageButton = findWebElement(By.xpath(GRID_LAST_PAGE_BUTTON_XPATH_STRING), false);
 
             // Parse the last page number from the last page string
             return Integer.parseInt(lastGridPageButton.getText().replace(GRID_PAGE_LIST_ITEM_PARTIAL_CLASS_STRING, ""));
         } catch (Exception exception) {
             if (failIfNoPagesFound) {
-                chromeBrowserDriver.getTestLogger().fail("Control for getting page count of " + this.getClass().getSimpleName() + " was not found -- no grid pages found", exception);
+                testLogger.fail("Control for getting page count of " + this.getClass().getSimpleName() + " was not found -- no grid pages found", exception);
             }
         }
 
@@ -54,13 +51,13 @@ public class SearchResultsGrid {
         
         try {
             // Get the list item control used to page to the first page
-            firstGridPageButton = chromeBrowserDriver.findWebElement(By.xpath(GRID_FIRST_PAGE_BUTTON_XPATH_STRING), false);
+            firstGridPageButton = findWebElement(By.xpath(GRID_FIRST_PAGE_BUTTON_XPATH_STRING), false);
 
         } catch (Exception e) {
             throw new Exception("Control for going to the first page of " + this.getClass().getSimpleName() + " was not found -- no grid pages found");
         }
         
-        chromeBrowserDriver.clickWebElement("First Grid Page button", firstGridPageButton);
+        clickWebElement("First Grid Page button", firstGridPageButton);
     }
 
     /** Page to the next grid page by clicking the '>' Next Page button */
@@ -69,32 +66,30 @@ public class SearchResultsGrid {
 
         try {
             // Get the list item control used to page to the next page
-            nextGridPageButton = chromeBrowserDriver.findWebElement(By.xpath(GRID_NEXT_PAGE_BUTTON_XPATH_STRING), false);
+            nextGridPageButton = findWebElement(By.xpath(GRID_NEXT_PAGE_BUTTON_XPATH_STRING), false);
 
-        } catch (Exception e) {
-            throw new Exception("Control for going to the next page of " + this.getClass().getSimpleName() + " was not found -- no grid pages found");
+            clickWebElement("Next Grid Page button", nextGridPageButton);
+
+        } catch (Exception exception) {
+            testLogger.fail("Error going to the next page of " + this.getClass().getSimpleName() + " may not have been found", exception);
         }
-
-        chromeBrowserDriver.clickWebElement("Next Grid Page button", nextGridPageButton);
     }
 
     /** Return the count of items on the current page (the number of item description controls found) */
     public int getCurrentPageItemCount() {
-        return chromeBrowserDriver.findWebElementList(By.xpath(SEARCH_RESULT_DETAIL_LINKS_XPATH)).size();
+        return findWebElementList(By.xpath(SEARCH_RESULT_DETAIL_LINKS_XPATH)).size();
     }
 
     /** Get the search page result descriptions from the currently visible search page */
     public List<String> getCurrentPageSearchResultsItemDescriptions(boolean failIfNoItemsFound) throws Exception {
-        TestLogger testLogger = chromeBrowserDriver.getTestLogger();
-
         List<String> itemDescriptions = new ArrayList<>();
 
         String itemDescription;
 
-        List<WebElement> itemDescriptionLinks = chromeBrowserDriver.findWebElementList(By.xpath(SEARCH_RESULT_DETAIL_LINKS_XPATH));
+        List<WebElement> itemDescriptionLinks = findWebElementList(By.xpath(SEARCH_RESULT_DETAIL_LINKS_XPATH));
 
         if (failIfNoItemsFound && itemDescriptionLinks.size() == 0) {
-            chromeBrowserDriver.getTestLogger().fail("No Search items found in " + this.getClass().getSimpleName() + "", null);
+            testLogger.fail("No Search items found in " + this.getClass().getSimpleName() + "", null);
         }
 
         int itemOrdinal = 1;
@@ -119,8 +114,6 @@ public class SearchResultsGrid {
     /** Get the search results descriptions from all the grid pages, by paging the grid and combining results from all pages */
     public List<String> getAllPagesSearchResultsItemDescriptions(boolean failIfNotItemsFound) throws Exception {
         int resultsPageCount = getSearchPageCount(failIfNotItemsFound);
-
-        TestLogger testLogger = chromeBrowserDriver.getTestLogger();
 
         testLogger.log(resultsPageCount + " page(s) of Search results data found");
 
@@ -149,8 +142,8 @@ public class SearchResultsGrid {
      */
     public void addItemToCart(int currentPageItemIndex) throws Exception {
         // Convert the current page index to ordinal (plus one) as xpath uses ordinals
-        WebElement addItemButton = chromeBrowserDriver.findWebElement(By.xpath(String.format(ADD_ITEM_TO_CART_BY_ORDINAL_FORMAT_STRING, currentPageItemIndex + 1)), true);
+        WebElement addItemButton = findWebElement(By.xpath(String.format(ADD_ITEM_TO_CART_BY_ORDINAL_FORMAT_STRING, currentPageItemIndex + 1)), true);
 
-        chromeBrowserDriver.clickWebElement("'Add to Cart' button for Search results item at current page item index " + currentPageItemIndex, addItemButton);
+        clickWebElement("'Add to Cart' button for Search results item at current page item index " + currentPageItemIndex, addItemButton);
     }
 }

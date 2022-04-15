@@ -2,11 +2,11 @@ package com.testws.test.production;
 
 import com.testws.core.TestLogger;
 import com.testws.core.Validation;
-import com.testws.driver.ChromeBrowserDriver;
-import com.testws.model.webui.CartPage;
-import com.testws.model.webui.CartProductAccessoriesPopupPage;
-import com.testws.model.webui.MainPortalPage;
-import com.testws.model.webui.SearchResultsGrid;
+import com.testws.library.webui.ChromeWebBrowser;
+import com.testws.model.webui.CartWebPage;
+import com.testws.model.webui.CartProductAccessoriesPopupWebPage;
+import com.testws.model.webui.MainPortalWebPage;
+import com.testws.model.webui.SearchResultsWebGrid;
 import com.testws.provider.SearchDataProvider;
 import com.testws.provider.TestEnvironmentType;
 import com.testws.provider.WebPortalProvider;
@@ -24,20 +24,22 @@ public class SearchTest {
     // Define the test environment for this test (Production)
     private static final TestEnvironmentType TEST_ENVIRONMENT_TYPE =       TestEnvironmentType.TEST_ENVIRONMENT_PRODUCTION;
 
-    // UI elements
-    private ChromeBrowserDriver chromeBrowserDriver;
-    private MainPortalPage mainPortalPage;
-
     // Logging and validation
     private final TestLogger testLogger =                         new TestLogger();
     private final Validation validation =                         new Validation(testLogger);
 
-    /** Set up the test case by using the Production environment, initializing a Chrome web driver, and opening the Main Portal Web page */
+    // Define UI elements
+    private ChromeWebBrowser chromeWebBrowser;
+    private MainPortalWebPage mainPortalPage;
+
+    /** Set up the test case by using the Production environment, opening a Chrome Browser, and opening the Main Portal Web page */
     @BeforeMethod
     public void setUp() throws Exception {
-        chromeBrowserDriver =   new ChromeBrowserDriver().initialize(testLogger);
+        chromeWebBrowser =      new ChromeWebBrowser();
 
-        mainPortalPage =        new MainPortalPage(chromeBrowserDriver);
+        chromeWebBrowser.open(testLogger);
+
+        mainPortalPage =        new MainPortalWebPage(chromeWebBrowser);
 
         mainPortalPage.open(WebPortalProvider.getMainPortalURL(TEST_ENVIRONMENT_TYPE));
     }
@@ -45,15 +47,15 @@ public class SearchTest {
     /** Clean up the test case by closing the web page and Chrome browser */
     @AfterMethod
     public void tearDown() {
-        chromeBrowserDriver.quit();
+        chromeWebBrowser.close();
     }
 
     /** Test Search by getting expected valid data for the test environment, performing the search, and validating expected result string in all the search results */
     @Test
     public void testMainPortalPageSearch() throws Exception {
-        SearchResultsGrid searchResultsGrid =                               mainPortalPage.getSearchResultsGrid();
-        CartProductAccessoriesPopupPage cartProductAccessoriesPopupPage =   mainPortalPage.getCartProductAccessoriesPopupPage();
-        CartPage cartPage =                                                 mainPortalPage.getCartPage();
+        SearchResultsWebGrid searchResultsWebGrid =                             mainPortalPage.getSearchResultsGrid();
+        CartProductAccessoriesPopupWebPage cartProductAccessoriesPopupPage =    mainPortalPage.getCartProductAccessoriesPopupPage();
+        CartWebPage cartPage =                                                  mainPortalPage.getCartPage();
 
         // Get the search data from the search data provider
         Map<String, String> expectedSearchResultTextBySearchInputText = SearchDataProvider.getExpectedSearchResultTextBySearchInputText(TEST_ENVIRONMENT_TYPE);
@@ -67,7 +69,7 @@ public class SearchTest {
 
         // Get a list of all search descriptions from the Search results Grid on the main portal page (expect results are found for this test)
         // The method will perform the paging needed in the search results grid to get search results from all pages
-        List<String> searchResultsDescriptions =    searchResultsGrid.getAllPagesSearchResultsItemDescriptions(true);
+        List<String> searchResultsDescriptions =    searchResultsWebGrid.getAllPagesSearchResultsItemDescriptions(true);
 
         // Validate the expected partial text is in all the search results descriptions
         // If one or more results don't match, the method will log ALL mismatching results across all the web pages before failing the test case
@@ -77,7 +79,7 @@ public class SearchTest {
         String lastSearchItemDescription = searchResultsDescriptions.get(searchResultsDescriptions.size() - 1);
 
         // Add the last item to the cart - need to get the current page item count to calculate its index on the current page
-        searchResultsGrid.addItemToCart(searchResultsGrid.getCurrentPageItemCount() - 1);
+        searchResultsWebGrid.addItemToCart(searchResultsWebGrid.getCurrentPageItemCount() - 1);
 
         // If the product accessory popup appears within three seconds, select the first option and click add to cart button
         if (cartProductAccessoriesPopupPage.isVisible(3)) {

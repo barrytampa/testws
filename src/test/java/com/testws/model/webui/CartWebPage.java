@@ -1,6 +1,7 @@
 package com.testws.model.webui;
 
-import com.testws.driver.ChromeBrowserDriver;
+import com.testws.library.webui.AbstractWebPage;
+import com.testws.library.webui.ChromeWebBrowser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,26 +15,23 @@ import java.util.List;
  * Created by Barry Ollikkala on 4/13/2022.
  *
  * The Product Cart page */
-public class CartPage {
+public class CartWebPage extends AbstractWebPage {
 
+    // Control locators
     private static final String EMPTY_CART_BUTTON_XPATH =       "//a[contains(@class, 'emptyCartButton')]";
     private static final String ITEM_DESCRIPTIONS_XPATH =       "//div[contains(@class, 'cartItem ag-item gtm-product-auto')]//span[contains(@class, 'itemDescription')]//a";
 
-    final ChromeBrowserDriver chromeBrowserDriver;
+    private final EmptyCartConfirmationPopupWebPage emptyCartConfirmationPopupPage;
 
-    private final EmptyCartConfirmationPopupPage emptyCartConfirmationPopupPage;
-
-    public EmptyCartConfirmationPopupPage getEmptyCartConfirmationPopupPage() {     return emptyCartConfirmationPopupPage; }
+    public EmptyCartConfirmationPopupWebPage getEmptyCartConfirmationPopupPage() {     return emptyCartConfirmationPopupPage; }
 
     @FindBy(xpath = EMPTY_CART_BUTTON_XPATH)
     public WebElement emptyCartButton;
 
-    public CartPage(ChromeBrowserDriver chromeBrowserDriver) {
-        this.chromeBrowserDriver = chromeBrowserDriver;
+    public CartWebPage(ChromeWebBrowser chromeWebBrowser) {
+        super(chromeWebBrowser);
 
-        chromeBrowserDriver.initPageFactoryElements(this);
-
-        emptyCartConfirmationPopupPage =        new EmptyCartConfirmationPopupPage(chromeBrowserDriver);
+        emptyCartConfirmationPopupPage =        new EmptyCartConfirmationPopupWebPage(chromeWebBrowser);
     }
 
     /**
@@ -42,7 +40,7 @@ public class CartPage {
     public List<String> getItemDescriptions() {
         List<String> itemDescriptions = new ArrayList<>();
 
-        List<WebElement> itemDescriptionWebElements = chromeBrowserDriver.findWebElementList(By.xpath(ITEM_DESCRIPTIONS_XPATH));
+        List<WebElement> itemDescriptionWebElements = findWebElementList(By.xpath(ITEM_DESCRIPTIONS_XPATH));
 
         for (WebElement itemDescriptionWebElement : itemDescriptionWebElements) {
             itemDescriptions.add(itemDescriptionWebElement.getText());
@@ -55,7 +53,7 @@ public class CartPage {
      * Empty the cart by clicking the button to empty it, and verify there are no items in the cart
      */
     public void emptyCart() throws Exception {
-        chromeBrowserDriver.clickWebElement("'Empty Cart' Button in the Cart's Header", emptyCartButton);
+        clickWebElement("'Empty Cart' Button in the Cart's Header", emptyCartButton);
 
         emptyCartConfirmationPopupPage.accept();
 
@@ -74,6 +72,6 @@ public class CartPage {
             Thread.sleep(100);
         }
 
-        chromeBrowserDriver.getTestLogger().getValidation().validateEquals(cartItemsCount, 0, "Cart Item Count");
+        validation.validateEquals(cartItemsCount, 0, "Cart Item Count");
     }
 }
