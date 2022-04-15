@@ -24,7 +24,7 @@ public class TestLogger {
 
     /**
      * Write a numbered test step to the test log, incrementing the test step ordinal
-     * @param text
+     * @param text      Text to write as test step to test log
      */
     public void logTestStep(String text) {
         writeLogLine(currentTestStepOrdinal + ". " + text);
@@ -34,17 +34,16 @@ public class TestLogger {
 
     /**
      * Write a plain text string to the test log
-     * @param text
+     * @param text      Text to write to test log
      */
     public void log(String text) {
         writeLogLine("  " + text);
     }
 
-    /** Write a failure to the test log, then throw an exception to end the test (normally we would capture a screen shot here too)
+    /** Write a failure to the test log, then throw an exception to end the test (normally we would capture a screenshot here too)
      *
      * @param text          Text to log as failure
      * @param exception     Exception to be logged
-     * @throws Exception
      */
     public void fail(String text, Exception exception) throws Exception {
         writeLogLine("*********");
@@ -71,7 +70,7 @@ public class TestLogger {
 
     /** Internal method to perform the actual writing to the test log - for demo purposes we will just write to the console
      *
-     * @param text
+     * @param text      Text to write to the Test Log
      */
     private void writeLogLine(String text) {
         System.out.println(text);

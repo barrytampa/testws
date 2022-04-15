@@ -1,6 +1,7 @@
 package com.testws.core;
 
 import java.util.List;
+import java.util.Objects;
 
 /** Common test validation methods, which will log to the running test log
  * Copyright (c) 2022. Barry Ollikkala
@@ -18,14 +19,13 @@ public class Validation {
 
     /** Validate two values are equal with full logging */
     public void validateEquals(Object actualValue, Object expectedValue, String itemLogDescription) throws Exception {
-        String actualValueLogString =       actualValue == null     ? "<null>" : actualValue.toString();
         String expectedValueLogString =     expectedValue == null   ? "<null>" : expectedValue.toString();
 
         testLogger.logTestStep("Verify " + itemLogDescription + " is '" + expectedValueLogString + "'");
 
-        boolean isEqual = actualValue == null ? expectedValue == null : actualValue.equals(expectedValue);
+        if (!Objects.equals(actualValue, expectedValue)) {
+            String actualValueLogString =       actualValue == null     ? "<null>" : actualValue.toString();
 
-        if (!isEqual) {
             testLogger.fail(itemLogDescription + " was not '" + expectedValueLogString + "', it was '" + actualValueLogString + "'", null);
         }
     }
@@ -59,7 +59,7 @@ public class Validation {
                             " did NOT contain expected partial text '" + expectedPartialText + "' - failures were: " + nonMatchingItemLogText,
                     null);
         } else {
-            testLogger.log("All " + totalItemCount + " item(s) in " + listLogDescription + " were found to contain the sub-string '" + expectedPartialText + "' as expected");
+            testLogger.log("All " + totalItemCount + " item(s) in " + listLogDescription + "list were found to contain the sub-string '" + expectedPartialText + "' as expected");
         }
     }
 

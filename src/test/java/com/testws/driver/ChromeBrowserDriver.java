@@ -24,8 +24,10 @@ public class ChromeBrowserDriver {
 
     /**
      * Initialize the Chrome browser driver, setting up chromedriver using WebDriverManager
-     * Opens and maximizes the chrome browser
-     * @param testLogger
+     * Opens and maximizes the Chrome browser
+     *
+     * Note: this is not done in the constructor in case multiple browsers are used for factory test cases, they must be started separately from object instantiation
+     * @param testLogger            Test Logger to attach to the browser
      */
     public ChromeBrowserDriver initialize(TestLogger testLogger) {
         this.testLogger = testLogger;
@@ -62,8 +64,7 @@ public class ChromeBrowserDriver {
 
     /** Go to the given URL, logging a test step
      *
-     * @param urlText
-     * @throws Exception
+     * @param urlText       URL string to navigate to
      */
     public void gotoUrl(String urlText) throws Exception {
         testLogger.logTestStep("Go to URL '" + urlText + "'");
@@ -93,11 +94,30 @@ public class ChromeBrowserDriver {
             driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
             if (failIfNotFound) {
-                testLogger.fail("Web Element not found with locator '" + locator, exception);
+                testLogger.fail("Web Element not found with locator '" + locator + "'", exception);
             }
         }
 
         return webElement;
+    }
+
+    /** Return True if the given web element is valid and displayed within specified time limit
+     * @param webElement                Web element to check if displayed
+     * @param timeLimitInSeconds        Time limit for the check, in seconds
+     */
+    public boolean webElementIsDisplayed(WebElement webElement, int timeLimitInSeconds) {
+        boolean isDisplayed = false;
+
+        // If we don't have to fail if not found, use short timeout as we probably aren't expecting the element to be there
+        driver.manage().timeouts().implicitlyWait(timeLimitInSeconds, TimeUnit.SECONDS);
+
+        try {
+            isDisplayed = webElement.isDisplayed();
+        } catch (Exception exception) {}
+
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+        return isDisplayed;
     }
 
     /** Find the list of web elements with the given selenium locator */
@@ -129,26 +149,26 @@ public class ChromeBrowserDriver {
             }
 
         } catch (Exception exception) {
-            testLogger.fail("Error clicking '" + controlDescription + "'", exception);
+            testLogger.fail("Error clicking " + controlDescription, exception);
         }
     }
 
     /** Click the given selenium web element using javascript click, logging a step to repro using the given control's logging description */
     public void clickWebElementJS(String controlDescription, WebElement webElement) throws Exception {
-        testLogger.logTestStep("Click '" + controlDescription + "'");
+        testLogger.logTestStep("Click (using JS) " + controlDescription);
 
         try {
             JavascriptExecutor javascriptExecutor = new EventFiringWebDriver(driver);
 
             javascriptExecutor.executeScript("arguments[0].click()", webElement);
         } catch (Exception exception) {
-            testLogger.fail("Error clicking using JS '" + controlDescription + "'", exception);
+            testLogger.fail("Error clicking (using JS) " + controlDescription, exception);
         }
     }
 
     /** Type text in the given selenium web element, logging a step to repro using the given control's logging description */
     public void sendKeysToWebElement(String text, String controlDescription, WebElement webElement) throws Exception {
-        testLogger.logTestStep("Enter text '" + text + "' into '"+ controlDescription + "'");
+        testLogger.logTestStep("Enter text '" + text + "' into "+ controlDescription);
 
         try {
             webElement.sendKeys(text);

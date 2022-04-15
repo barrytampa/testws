@@ -1,4 +1,4 @@
-package com.testws.core;
+package com.testws.provider;
 
 /**
  *  Copyright (c) 2022. Barry Ollikkala

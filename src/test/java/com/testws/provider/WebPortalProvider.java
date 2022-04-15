@@ -1,7 +1,5 @@
 package com.testws.provider;
 
-import com.testws.core.TestEnvironmentType;
-
 /**
  * Copyright (c) 2022. Barry Ollikkala
  * Created by Barry Ollikkala on 4/13/2022.

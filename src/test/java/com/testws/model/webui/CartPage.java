@@ -19,7 +19,7 @@ public class CartPage {
     private static final String EMPTY_CART_BUTTON_XPATH =       "//a[contains(@class, 'emptyCartButton')]";
     private static final String ITEM_DESCRIPTIONS_XPATH =       "//div[contains(@class, 'cartItem ag-item gtm-product-auto')]//span[contains(@class, 'itemDescription')]//a";
 
-    ChromeBrowserDriver chromeBrowserDriver;
+    final ChromeBrowserDriver chromeBrowserDriver;
 
     private final EmptyCartConfirmationPopupPage emptyCartConfirmationPopupPage;
 

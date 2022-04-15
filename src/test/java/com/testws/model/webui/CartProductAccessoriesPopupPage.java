@@ -21,7 +21,7 @@ public class CartProductAccessoriesPopupPage {
     @FindBy(xpath = "//select[@name='accessories']")
     public WebElement productAccessoryDropdownWebElement;
 
-    private ChromeBrowserDriver chromeBrowserDriver;
+    private final ChromeBrowserDriver chromeBrowserDriver;
 
     public CartProductAccessoriesPopupPage(ChromeBrowserDriver chromeBrowserDriver) {
         this.chromeBrowserDriver = chromeBrowserDriver;
@@ -29,13 +29,13 @@ public class CartProductAccessoriesPopupPage {
         chromeBrowserDriver.initPageFactoryElements(this);
     }
 
-    /** Return true if the popup (the select control on it) is visible */
-    public boolean isVisible() {
-        try {
-            return productAccessoryDropdownWebElement.isDisplayed();
-        } catch (Exception exception) {
-            return false;
-        }
+    /** Return true if the popup (the select control on it) is displayed within given time limit
+     *
+     * @param timeLimitInSeconds        time limit for waiting to see if web element is displayed
+     * @return
+     */
+    public boolean isVisible(int timeLimitInSeconds) {
+        return chromeBrowserDriver.webElementIsDisplayed(productAccessoryDropdownWebElement, timeLimitInSeconds);
     }
 
     /** Cancel the popup by pressing the cancel button */

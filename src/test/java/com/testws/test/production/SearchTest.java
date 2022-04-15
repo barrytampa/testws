@@ -8,7 +8,8 @@ import com.testws.model.webui.CartProductAccessoriesPopupPage;
 import com.testws.model.webui.MainPortalPage;
 import com.testws.model.webui.SearchResultsGrid;
 import com.testws.provider.SearchDataProvider;
-import com.testws.core.TestEnvironmentType;
+import com.testws.provider.TestEnvironmentType;
+import com.testws.provider.WebPortalProvider;
 import org.testng.annotations.*;
 
 import java.util.List;
@@ -21,10 +22,7 @@ import java.util.Map;
  * Requested test case to use the web portal's search function, validate that all search results contain an expected string, add last search item to cart, and empty the cart */
 public class SearchTest {
     // Define the test environment for this test (Production)
-    private final TestEnvironmentType testEnvironmentType =       TestEnvironmentType.TEST_ENVIRONMENT_PRODUCTION;
-
-    // Data Providers
-    private SearchDataProvider searchDataProvider;
+    private static final TestEnvironmentType TEST_ENVIRONMENT_TYPE =       TestEnvironmentType.TEST_ENVIRONMENT_PRODUCTION;
 
     // UI elements
     private ChromeBrowserDriver chromeBrowserDriver;
@@ -37,13 +35,11 @@ public class SearchTest {
     /** Set up the test case by using the Production environment, initializing a Chrome web driver, and opening the Main Portal Web page */
     @BeforeMethod
     public void setUp() throws Exception {
-        searchDataProvider =    new SearchDataProvider(TestEnvironmentType.TEST_ENVIRONMENT_PRODUCTION);
-
         chromeBrowserDriver =   new ChromeBrowserDriver().initialize(testLogger);
 
-        mainPortalPage =        new MainPortalPage(chromeBrowserDriver, testEnvironmentType);
+        mainPortalPage =        new MainPortalPage(chromeBrowserDriver);
 
-        mainPortalPage.open();
+        mainPortalPage.open(WebPortalProvider.getMainPortalURL(TEST_ENVIRONMENT_TYPE));
     }
 
     /** Clean up the test case by closing the web page and Chrome browser */
@@ -60,7 +56,7 @@ public class SearchTest {
         CartPage cartPage =                                                 mainPortalPage.getCartPage();
 
         // Get the search data from the search data provider
-        Map<String, String> expectedSearchResultTextBySearchInputText = searchDataProvider.getExpectedSearchResultTextBySearchInputText();
+        Map<String, String> expectedSearchResultTextBySearchInputText = SearchDataProvider.getExpectedSearchResultTextBySearchInputText(TEST_ENVIRONMENT_TYPE);
 
         // Break out the search text and expected result, from the first entry only
         String searchText =                         (String)expectedSearchResultTextBySearchInputText.keySet().toArray()[0];
@@ -83,8 +79,8 @@ public class SearchTest {
         // Add the last item to the cart - need to get the current page item count to calculate its index on the current page
         searchResultsGrid.addItemToCart(searchResultsGrid.getCurrentPageItemCount() - 1);
 
-        // If the product accessory popup appears, select the first option and click add to cart button
-        if (cartProductAccessoriesPopupPage.isVisible()) {
+        // If the product accessory popup appears within three seconds, select the first option and click add to cart button
+        if (cartProductAccessoriesPopupPage.isVisible(3)) {
             cartProductAccessoriesPopupPage.selectAccessoryAtIndex(1);
 
             cartProductAccessoriesPopupPage.accept();

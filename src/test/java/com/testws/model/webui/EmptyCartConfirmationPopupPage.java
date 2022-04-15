@@ -16,7 +16,7 @@ public class EmptyCartConfirmationPopupPage {
     @FindBy(xpath = "//button[contains(text(),'Close')]")
     public WebElement cancelButton;
 
-    private ChromeBrowserDriver chromeBrowserDriver;
+    private final ChromeBrowserDriver chromeBrowserDriver;
 
     public EmptyCartConfirmationPopupPage(ChromeBrowserDriver chromeBrowserDriver) {
         this.chromeBrowserDriver = chromeBrowserDriver;

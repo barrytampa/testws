@@ -1,8 +1,6 @@
 package com.testws.model.webui;
 
 import com.testws.driver.ChromeBrowserDriver;
-import com.testws.core.TestEnvironmentType;
-import com.testws.provider.WebPortalProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,8 +13,6 @@ import org.openqa.selenium.support.FindBy;
  */
 public class MainPortalPage {
     protected final ChromeBrowserDriver chromeBrowserDriver;
-
-    protected final TestEnvironmentType testEnvironmentType;
 
     // Control Locator strings
     private static final String VIEW_CART_LINK_XPATH =              "//a[@data-testid='cart-nav-link']";
@@ -42,12 +38,10 @@ public class MainPortalPage {
     public CartProductAccessoriesPopupPage getCartProductAccessoriesPopupPage() {   return cartProductAccessoriesPopupPage; }
     public CheckoutPopupPage getCheckoutPopupPage() {                               return checkoutPopupPage; }
 
-    public MainPortalPage(ChromeBrowserDriver chromeBrowserDriver, TestEnvironmentType testEnvironmentType) {
+    public MainPortalPage(ChromeBrowserDriver chromeBrowserDriver) {
         this.chromeBrowserDriver = chromeBrowserDriver;
 
         chromeBrowserDriver.initPageFactoryElements(this);
-
-        this.testEnvironmentType = testEnvironmentType;
 
         searchResultsGrid =                     new SearchResultsGrid(this);
         cartPage =                              new CartPage(chromeBrowserDriver);
@@ -56,8 +50,8 @@ public class MainPortalPage {
     }
 
     /** Open the Main portal page by navigating to the URL for this test environment given by the Web portal Data provider */
-    public void open() throws Exception {
-        chromeBrowserDriver.gotoUrl(WebPortalProvider.getMainPortalURL(testEnvironmentType));
+    public void open(String url) throws Exception {
+        chromeBrowserDriver.gotoUrl(url);
     }
 
     /** Perform a search by typing the given search text into the search input box, and clicking the search button

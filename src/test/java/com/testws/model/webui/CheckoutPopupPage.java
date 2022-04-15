@@ -22,7 +22,7 @@ public class CheckoutPopupPage {
     @FindBy(xpath = CHECKOUT_BUTTON_XPATH)
     public WebElement checkoutButton;
 
-    private ChromeBrowserDriver chromeBrowserDriver;
+    private final ChromeBrowserDriver chromeBrowserDriver;
 
     public CheckoutPopupPage(ChromeBrowserDriver chromeBrowserDriver) {
         this.chromeBrowserDriver = chromeBrowserDriver;
