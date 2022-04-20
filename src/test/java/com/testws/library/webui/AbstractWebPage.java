@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/** Base Class for Web Pages in the Applicatiojn's Page object model
+/** Base Class for Web Pages in the Application's Page object model
  * Copyright (c) 2022. Barry Ollikkala
  * Created by Barry Ollikkala on 4/13/2022.
  *
@@ -37,6 +37,8 @@ public abstract class AbstractWebPage {
         PageFactory.initElements(chromeWebBrowser.webDriver, this);
     }
 
+    // Internal DRIVER/PAGE LAYER METHODS to directly access Selenium calls, with logging
+
     /** Find the selenium web element with given locator, optionally failing if not found
      *  Normally we would change the selenium timeout if not expecting the web element so that we don't have an unnecessary wait of the default wait time
      * */
@@ -61,8 +63,6 @@ public abstract class AbstractWebPage {
 
         return webElement;
     }
-
-    // DRIVER/PAGE LAYER METHODS to directly access Selenium calls, with logging
 
     /** Return True if the given web element is valid and displayed within specified time limit
      * @param webElement                Web element to check if displayed

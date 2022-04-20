@@ -19,13 +19,13 @@ public class MainPortalWebPage extends AbstractWebPage {
     private static final String SEARCH_INPUTBOX_XPATH =             "//input[@id='searchval']";
     private static final String CLEAR_SEARCH_BUTTON_XPATH =         "//button[@aria-label='Clear Search']";
 
-    public WebElement searchInputBox;
+    private WebElement searchInputBox;
 
     @FindBy(xpath = SEARCH_BUTTON_XPATH)
-    public WebElement performSearchButton;
+    private WebElement performSearchButton;
 
     @FindBy(xpath = VIEW_CART_LINK_XPATH)
-    public WebElement viewCartLink;
+    private WebElement viewCartLink;
 
     private final SearchResultsWebGrid searchResultsWebGrid;
     private final CartWebPage cartPage;

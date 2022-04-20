@@ -18,10 +18,10 @@ public class CheckoutPopupWebPage extends AbstractWebPage {
     private static final String CHECKOUT_BUTTON_XPATH =     POPUP_XPATH + "//a[contains(text(),'Checkout')]";
 
     @FindBy(xpath = VIEW_CART_BUTTON_XPATH)
-    public WebElement viewCartLink;
+    private WebElement viewCartLink;
 
     @FindBy(xpath = CHECKOUT_BUTTON_XPATH)
-    public WebElement checkoutButton;
+    private WebElement checkoutButton;
 
     public CheckoutPopupWebPage(ChromeWebBrowser chromeWebBrowser) {
         super(chromeWebBrowser);

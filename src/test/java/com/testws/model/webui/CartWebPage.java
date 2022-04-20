@@ -26,7 +26,7 @@ public class CartWebPage extends AbstractWebPage {
     public EmptyCartConfirmationPopupWebPage getEmptyCartConfirmationPopupPage() {     return emptyCartConfirmationPopupPage; }
 
     @FindBy(xpath = EMPTY_CART_BUTTON_XPATH)
-    public WebElement emptyCartButton;
+    private WebElement emptyCartButton;
 
     public CartWebPage(ChromeWebBrowser chromeWebBrowser) {
         super(chromeWebBrowser);

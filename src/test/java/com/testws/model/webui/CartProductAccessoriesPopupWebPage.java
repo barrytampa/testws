@@ -16,10 +16,10 @@ public class CartProductAccessoriesPopupWebPage extends AbstractWebPage {
     public WebElement cancelButton;
 
     @FindBy(xpath = "//button[contains(text(), 'Add To Cart')]")
-    public WebElement addToCartButton;
+    private WebElement addToCartButton;
 
     @FindBy(xpath = "//select[@name='accessories']")
-    public WebElement productAccessoryDropdownWebElement;
+    private WebElement productAccessoryDropdownWebElement;
 
     public CartProductAccessoriesPopupWebPage(ChromeWebBrowser chromeWebBrowser) {
         super(chromeWebBrowser);

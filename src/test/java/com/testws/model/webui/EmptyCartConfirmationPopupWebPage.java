@@ -12,10 +12,10 @@ import org.openqa.selenium.support.FindBy;
  * Popup that may appear if an item is selected to be added to the cart, to allow user choosing accessory options */
 public class EmptyCartConfirmationPopupWebPage extends AbstractWebPage {
     @FindBy(xpath = "//button[contains(text(),'Empty Cart')]")
-    public WebElement acceptButton;
+    private WebElement acceptButton;
 
     @FindBy(xpath = "//button[contains(text(),'Close')]")
-    public WebElement cancelButton;
+    private WebElement cancelButton;
 
     public EmptyCartConfirmationPopupWebPage(ChromeWebBrowser chromeWebBrowser) {
         super(chromeWebBrowser);
